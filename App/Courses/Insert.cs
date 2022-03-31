@@ -31,21 +31,20 @@ namespace App.Courses
             
             public async Task<Unit> Handle(InsertCourse request, CancellationToken cancellationToken)
             {
-                    var course = new Course();
-                    course.Title = request.Title;
-                    course.Description = request.Description;
-                    course.StartDate = request.StartDate;
+                var course = new Course();
+                course.Title = request.Title;
+                course.Description = request.Description;
+                course.StartDate = request.StartDate;
 
-                    this._db.Courses.Add(course);
-                    var success = await this._db.SaveChangesAsync() > 0;
-                    if(success)
-                    {
-                        return Unit.Value;
-                    }
-                    else
-                    {
-                        throw new Exception("Problem saving changes");
-                    }
+                this._db.Courses.Add(course);
+                var success = await this._db.SaveChangesAsync() > 0;
+                if(success)
+                {
+                    return Unit.Value;
+                }
+                    
+                throw new Exception("Problem saving changes");
+                    
             }
         }
 

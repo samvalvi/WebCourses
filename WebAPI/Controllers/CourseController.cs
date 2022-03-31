@@ -48,5 +48,11 @@ namespace WebAPI.Controllers
             return await this._mediator.Send(data);
         }
         
+        [HttpDelete]
+        [Route("/course/delete/{id:int}")]
+        public async Task<ActionResult<Unit>> DeleteCourse(int id)
+        {
+            return await this._mediator.Send(new Delete.DeleteCourse { ID = id });
+        }
     }
 }

@@ -12,6 +12,7 @@ builder.Services.AddMediatR(typeof(SelectAll.Handler).Assembly);
 builder.Services.AddMediatR(typeof(SelectById.Handler).Assembly);
 builder.Services.AddMediatR(typeof(Insert.Handler).Assembly);
 builder.Services.AddMediatR(typeof(Update.Handler).Assembly);
+builder.Services.AddMediatR(typeof(Delete.Handler).Assembly);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
