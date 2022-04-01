@@ -1,4 +1,5 @@
 ﻿using Domain;
+using FluentValidation;
 using MediatR;
 using Persistence;
 using System;
@@ -14,8 +15,15 @@ namespace App.Courses
     {
         public class CourseById : IRequest<Course> 
         {
-            [Required(ErrorMessage = "Course Id is required")]
             public int Id { get; set; }
+        }
+
+        public class ValidationHandler : AbstractValidator<CourseById>
+        {
+            public ValidationHandler()
+            {
+                RuleFor(x => x.Id).NotEmpty();
+            }
         }
 
         public class Handler : IRequestHandler<CourseById, Course>

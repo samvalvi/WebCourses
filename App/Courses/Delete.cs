@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 using System;
@@ -14,8 +15,15 @@ namespace App.Courses
     {
         public class DeleteCourse : IRequest
         {
-            [Required(ErrorMessage = "Course Id is required")]
             public int ID { get; set; }
+        }
+
+        public class ValidationHandler : AbstractValidator<DeleteCourse>
+        {
+            public ValidationHandler()
+            {
+                RuleFor(x => x.ID).NotEmpty();
+            }
         }
 
         public class Handler : IRequestHandler<DeleteCourse>

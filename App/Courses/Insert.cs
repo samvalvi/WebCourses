@@ -1,4 +1,5 @@
 ﻿using Domain;
+using FluentValidation;
 using MediatR;
 using Persistence;
 using System;
@@ -15,10 +16,17 @@ namespace App.Courses
         public class InsertCourse : IRequest 
         {
             public string Title { get; set; }
-            [StringLength(50, ErrorMessage = "Description must be less than 50 characters")]
             public string Description { get; set; }
-            [Required(ErrorMessage = "Start Date is required")]
             public DateTime StartDate { get; set; }
+        }
+
+        public class ValidationHandler : AbstractValidator<InsertCourse>
+        {
+            public ValidationHandler()
+            {
+                RuleFor(x => x.Title).NotEmpty().MaximumLength(50);
+                RuleFor(x => x.Description).NotEmpty();
+            }
         }
 
         public class Handler : IRequestHandler<InsertCourse>

@@ -1,4 +1,5 @@
 ﻿using Domain;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -15,12 +16,21 @@ namespace App.Courses
     {
         public class UpdateCourse : IRequest
         {
-            [Key]
             public int CourseID { get; set; }
             public string Title { get; set; }
-            [StringLength(50, ErrorMessage = "Description must be less than 50 characters")]
             public string Description { get; set; }
             public DateTime? StartDate { get; set; }
+        }
+
+        public class ValidationHandler : AbstractValidator<UpdateCourse>
+        {
+            public ValidationHandler()
+            {
+                RuleFor(x => x.CourseID).NotEmpty();
+                RuleFor(x => x.Title).NotEmpty().MaximumLength(50);
+                RuleFor(x => x.Description).NotEmpty().MaximumLength(50);
+                RuleFor(x => x.StartDate).NotEmpty();
+            }
         }
 
         public class Handler : IRequestHandler<UpdateCourse>
