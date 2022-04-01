@@ -1,4 +1,5 @@
-﻿using Domain;
+﻿using App.ErrorHandler;
+using Domain;
 using FluentValidation;
 using MediatR;
 using Persistence;
@@ -6,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -37,6 +39,10 @@ namespace App.Courses
             public async Task<Course> Handle(CourseById request, CancellationToken cancellationToken)
             {
                 var course = await this._db.Courses.FindAsync(request.Id);
+                if (course == null)
+                {
+                    throw new Error(HttpStatusCode.NotFound, new { message = "Course not found" });
+                }
                 return course;
             }
         }

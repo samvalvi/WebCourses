@@ -1,4 +1,5 @@
-﻿using Domain;
+﻿using App.ErrorHandler;
+using Domain;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -43,10 +45,10 @@ namespace App.Courses
 
             public async Task<Unit> Handle(UpdateCourse request, CancellationToken cancellationToken)
             {
-                var course = await _db.Courses.AsNoTracking().FirstAsync(c => c.CourseID == request.CourseID);
+                var course = await _db.Courses.FindAsync(request.CourseID);
                 if (course == null)
                 {
-                    throw new Exception("Course not found");
+                    throw new Error(HttpStatusCode.NotFound, new { message = "Course not found" });
                 }
 
                 course.Title = request.Title ?? course.Title;
@@ -61,7 +63,7 @@ namespace App.Courses
                     return Unit.Value;
                 }
 
-                throw new Exception("Problem updating course");
+                throw new Error(HttpStatusCode.BadRequest,new { message = "Problem updating course" });
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using App.ErrorHandler;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -6,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -37,13 +39,13 @@ namespace App.Courses
             
             public async Task<Unit> Handle(DeleteCourse request, CancellationToken cancellationToken)
             {
-                var curso = await this._db.Courses.AsNoTracking().FirstAsync(x => x.CourseID == request.ID);
-                if (curso == null)
+                var course = await this._db.Courses.FindAsync(request.ID);
+                if (course == null)
                 {
-                    throw new Exception("Course not found");
+                    throw new Error(HttpStatusCode.NotFound, new { message = "Course not found" });
                 }
 
-                this._db.Courses.Remove(curso);
+                this._db.Courses.Remove(course);
                 var result = await this._db.SaveChangesAsync() > 0;
                 if (result)
                 {
